@@ -1,0 +1,371 @@
+Dawa Lama (109463980)
+CSE 337
+Assignment 2
+Mac OSX
+
+QUESTION 1
+
+ 
+a. 
+	Command: allv24:~> perl -v
+	This is perl 5, version 20, subversion 2 (v5.20.2) built for x86_64-linux-gnu-thread-multi
+
+b. 
+	Command: allv24:~> perldoc perlrun
+	
+c. 
+	Command: allv24:~> perldoc perlfunc
+
+d. 
+	Command: allv24:~> perldoc -f map
+
+e. 
+	Command: allv24:~> perldoc perlvar
+	Description: When referenced, $! retrieves the current value of the C
+               "errno" integer variable.  If $! is assigned a numerical value,
+               that value is stored in "errno".  When referenced as a string,
+               $! yields the system error string corresponding to "errno".
+
+               Many system or library calls set "errno" if they fail, to
+               indicate the cause of failure.  They usually do not set "errno"
+               to zero if they succeed.  This means "errno", hence $!, is
+               meaningful only immediately after a failure:
+
+                   if (open my $fh, "<", $filename) {
+                               # Here $! is meaningless.
+                               ...
+                   }
+                   else {
+                               # ONLY here is $! meaningful.
+                               ...
+                               # Already here $! might be meaningless.
+                   }
+                   # Since here we might have either success or failure,
+                   # $! is meaningless.
+
+               Here, meaningless means that $! may be unrelated to the outcome
+               of the "open()" operator.  Assignment to $! is similarly
+               ephemeral.  It can be used immediately before invoking the
+               "die()" operator, to set the exit value, or to inspect the
+               system error string corresponding to error n, or to restore $!
+               to a meaningful state.
+
+               Mnemonic: What just went bang?
+
+
+#QUESTION 2 
+
+Q2
+
+a. 
+	perl -le "@special=map{('?','-','\!','#',';')[rand 5]} 1..2;
+	@words=map{('a'..'z','A'..'Z')[rand 52]} 1..4; @digits=map{('0'..'9')[rand 10]}
+	1..2; print (@special,@words,@digits)"
+
+b. 
+	print grep{!($_ % 2 == 0)} split //, "ISE337";
+
+c.
+	perl -le 'use List::Util "reduce"; print reduce{($b % 2 == 0) ? $a + ($b/2):$a + $b}1..100;'
+
+
+
+
+#Question 3
+
+use strict; 
+use warnings;
+
+my $number_of_questions = $ARGV[0];
+print "You have total of $number_of_questions challenges. Get ready. Start! \n"; 
+
+my $iter_num = 0;
+my $total_score = 0;
+
+do{
+	$iter_num += 1;
+	my @available_operations = ('+', '-');
+	my $first_number = int(rand 20)+1;
+	my $second_number = int(rand 30)+1;
+	my $operator = $available_operations[rand @available_operations];
+
+	print "$first_number $operator $second_number = ";
+	my $input = <STDIN>;
+	unless($operator eq '-'){
+		my $correct_answer = $first_number + $second_number;
+		unless(!($correct_answer == $input)){
+			print "Excellent! \n";
+			$total_score += 1;
+		}
+	}
+	unless($operator eq '+'){
+		my $correct_answer = $first_number - $second_number; 
+		unless(!($correct_answer == $input)){
+			print "Excellent! \n";
+			$total_score += 1;
+		}
+
+	}
+}until($iter_num == $number_of_questions);
+
+my $percentage_acheived = ($total_score/$number_of_questions)*100;
+$percentage_acheived = sprintf "%.2f", $percentage_acheived;
+print "Your score is $total_score out of $number_of_questions. That's $percentage_acheived% correct. Congrats.\n";
+
+
+
+#Question 4
+
+use strict; 
+use warnings;
+
+my $input_file_name = $ARGV[0];
+open FILEIN, "< $input_file_name";
+
+while(my $next = <FILEIN>){
+	chomp $next;
+	if(-e $next){
+		print "E\t";
+	
+		if (-T $next){
+			print "T\t";
+		}else{
+			print "-\t";
+		}	
+	
+		if (-r $next){
+			print "R \t";
+		}else{
+			print "-\t";
+		}
+	
+		if(-w $next){
+			print "W\t";
+		}else{
+			print "-\t";
+		}
+
+		if(-x $next){
+			print "X\t";
+		}else{
+			print "-\t";
+		}
+		print "$next \n";
+	}else{
+		print "-\t-\t-\t-\t-\t$next \n";
+	}
+}
+
+
+#QUESTION 5a
+
+use strict;
+use warnings;
+
+my $encrypted_text = "pda lupdkj lnkcnwiiejc hwjcqwca swo ejrajpaz xu cqezk rwj nkooqi, w zqpyd ykilqpan lnkcnwiian, wxkqp 25 uawno wck. rwj nkooqi zabejaz deo ckwho bkn lupdkj wo bkhhkso: wj awou wjz ejpqepera hwjcqwca fqop wo lksanbqh wo iwfkn ykilapepkno; klaj okqnya, ok wjukja ywj ykjpnexqpa pk epo zarahkliajp; ykza pdwp eo wo qjzanopwjzwxha wo lhwej ajcheod; oqepwxehepu bkn aranuzwu pwogo, whhksejc bkn odknp zarahkliajp peiao";
+
+sub decryption{
+	my $c = shift;
+	my $distance = ord($c);
+	while($distance >= 97 && $distance <=122){
+		$distance += 4;
+		if ($distance > 122){
+			$distance = ord($c) - 22;
+			return chr($distance);
+		}
+		return chr($distance);	
+	}
+	return $c;
+}
+
+my @individual_characters = split //, $encrypted_text;
+my @decrypted_text = map{decryption $_} @individual_characters;
+my $decrypted_text = join('', @decrypted_text);
+
+print "Decrypted text:\n $decrypted_text \n";
+
+
+
+
+#QUESTION 5b
+
+use strict;
+use warnings;
+
+my $plaintext = "the python programming language was invented by guido van rossum, a dutch computer programmer, about 25 years ago. van rossum defined his goals for python as follows: an easy and intuitive language just as powerful as major competitors; open source, so anyone can contribute to its development; code that is as understandable as plain english; suitability for everyday tasks, allowing for short development times";
+
+my $plaintext_after_encyrption = "pda lupdkj lnkcnwiiejc hwjcqwca swo ejrajpaz xu cqezk rwj nkooqi, w zqpyd ykilqpan lnkcnwiian, wxkqp 25 uawno wck. rwj nkooqi zabejaz deo ckwho bkn lupdkj wo bkhhkso: wj awou wjz ejpqepera hwjcqwca fqop wo lksanbqh wo iwfkn ykilapepkno; klaj okqnya, ok wjukja ywj ykjpnexqpa pk epo zarahkliajp; ykza pdwp eo wo qjzanopwjzwxha wo lhwej ajcheod; oqepwxehepu bkn aranuzwu pwogo, whhksejc bkn odknp zarahkliajp peiao";
+
+sub encryption{
+	my $c = shift;
+	my $distance = ord($c);
+	while($distance >= 97 && $distance <= 122){
+		if($distance > 100){
+			$distance -= 4; 
+			return chr($distance);
+		}
+		if($distance <= 100){
+			$distance += 22;
+			return chr($distance);
+		}
+	}
+	return $c;
+}
+
+my @individual_characters = split //, $plaintext;
+my @encrypted_text = map{encryption $_} @individual_characters;
+my $encrypted_text = join('', @encrypted_text);
+
+print "Encrypted text:\n $encrypted_text \n";
+
+
+print "\nPrinted only if encryption successful: Plaintext is Encrypted \n" if $encrypted_text eq $plaintext_after_encyrption;
+
+
+
+#QUESTION 6
+
+use strict;
+use warnings;
+
+print "Enter the name of the HTML file: \n";
+my $input_file_name = <STDIN>;
+open INPUT, "< $input_file_name";
+
+#output file
+open OUTPUT, "> images.html";
+
+my @links;
+while(<INPUT>){
+	$a = $_;
+	if($a =~ m/(http:\/\/(3|4).[^\s]+\.jpg)/g){
+		push(@links, $1);
+	}
+}
+
+my $length_link = @links;
+print "\n\nNumber of matching links found: $length_link \n";
+
+print OUTPUT qq(<html>\n<title>337 A2 HTML image</title>\n<body>\n);
+for (my $a=0; $a < $length_link; $a++){
+	print OUTPUT qq(<img src="$links[$a]">\n);
+}
+print OUTPUT qq(</body>\n</html>\n);
+
+close INPUT;
+close OUTPUT;
+
+
+
+
+
+#QUESTION 7
+
+
+
+#7 a.
+#PATH variable stores the path to the $ENV environment.
+use strict;
+use warnings;
+
+my $num = keys %ENV;
+print "\nNumber of environment vaiables in %ENV: $num";
+my $path = $ENV{'PATH'};
+print "\nPATH in %ENV:\n $path";
+my @dir= split(':', $path);
+my $num_dir = @dir;
+print "\nNumber of directory: ",int($num_dir), "\n";
+my @sorted_dir = sort {"\L$a" cmp "\L$b"} @dir;
+foreach my $dir (@sorted_dir){
+	print "$dir\n";
+}
+push @dir, $ENV{'PWD'};
+my $new_path_dir = join(':', @dir);
+$ENV{'PATH'} = $new_path_dir;
+print "\nNew Path with curret directory:\n$ENV{'PATH'}\n";
+
+
+system("while.pl");
+
+#if i use do 'while.pl', the code does work.
+#do 'while.pl';
+
+
+
+
+
+#QUESTION 8
+
+use strict;
+use warnings;
+
+print "Enter the file name: \n";
+my $input_file_name = <STDIN>;
+open IN, "< $input_file_name";
+
+my %words_list;
+while (my $line = <IN>) {
+   chomp $line;                   # remove trailing \n
+
+   map {
+      $words_list{lc $_}++;
+   } split /\s+/, $line;          # split on whitespace
+}
+
+foreach my $word (keys %words_list){
+	print $word," ", "="x $words_list{$word}, "\n";
+}
+
+
+
+
+
+#QUESTION 9 (BONUS QUESTION)
+
+use strict;
+use warnings;
+
+print "Enter the file name: \n";
+my $input_file_name = <STDIN>;
+open IN, "< $input_file_name";
+
+my %words_list;
+
+=do
+while (my $line = <IN>) {
+   chomp $line;                   # remove trailing \n
+
+   map {
+      $words_list{lc $_}++;
+   } split /\s+/, $line;          # split on whitespace
+}
+
+foreach my $word (keys %words_list){
+	print $word," ", "="x $words_list{$word}, "\n";
+}
+=cut
+
+
+while(my $line = <IN>){
+	chomp $line;
+	my @words = split / /, $line;
+	foreach my $word(@words){
+		%words_list{ for (my $word_in = 
+
+
+
+
+my $word_in = @words =~ m/$word_in\s*(w+)/;
+
+tring = "foo bar we will he will bar";
+@words = split / /, $string;
+@matched;
+foreach $word_in(@words){
+	$match = $word_in;
+	if( $string =~ m/^$match\s(\w+)\s/){
+	push(@matched, $1);
+	}
+ 
+ }
+print $word_in;
+print @matched;

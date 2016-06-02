@@ -1,0 +1,18 @@
+#QUESTION 2 
+
+Q2
+
+a. 
+	perl -le "@special=map{('?','-','\!','#',';')[rand 5]} 1..2;
+	@words=map{('a'..'z','A'..'Z')[rand 52]} 1..4; @digits=map{('0'..'9')[rand 10]}
+	1..2; print (@special,@words,@digits)"
+
+b. 
+	print grep{!($_ % 2 == 0)} split //, "ISE337";
+
+c.
+	perl -le 'use List::Util "reduce"; print reduce{($b % 2 == 0) ? $a + ($b/2):$a + $b}1..100;'
+
+
+
+

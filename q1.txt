@@ -1,0 +1,55 @@
+Dawa Lama (109463980)
+CSE 337
+Assignment 2
+Mac OSX
+
+QUESTION 1
+
+ 
+a. 
+	Command: allv24:~> perl -v
+	This is perl 5, version 20, subversion 2 (v5.20.2) built for x86_64-linux-gnu-thread-multi
+
+b. 
+	Command: allv24:~> perldoc perlrun
+	
+c. 
+	Command: allv24:~> perldoc perlfunc
+
+d. 
+	Command: allv24:~> perldoc -f map
+
+e. 
+	Command: allv24:~> perldoc perlvar
+	Description: When referenced, $! retrieves the current value of the C
+               "errno" integer variable.  If $! is assigned a numerical value,
+               that value is stored in "errno".  When referenced as a string,
+               $! yields the system error string corresponding to "errno".
+
+               Many system or library calls set "errno" if they fail, to
+               indicate the cause of failure.  They usually do not set "errno"
+               to zero if they succeed.  This means "errno", hence $!, is
+               meaningful only immediately after a failure:
+
+                   if (open my $fh, "<", $filename) {
+                               # Here $! is meaningless.
+                               ...
+                   }
+                   else {
+                               # ONLY here is $! meaningful.
+                               ...
+                               # Already here $! might be meaningless.
+                   }
+                   # Since here we might have either success or failure,
+                   # $! is meaningless.
+
+               Here, meaningless means that $! may be unrelated to the outcome
+               of the "open()" operator.  Assignment to $! is similarly
+               ephemeral.  It can be used immediately before invoking the
+               "die()" operator, to set the exit value, or to inspect the
+               system error string corresponding to error n, or to restore $!
+               to a meaningful state.
+
+               Mnemonic: What just went bang?
+
+
